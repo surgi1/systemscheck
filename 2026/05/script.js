@@ -3,7 +3,6 @@ const offMap = (map, x, y) => map[y] === undefined || map[y][x] === undefined;
 
 const parse = input => input.split('\n').map(line => line.split(' ').map(coords => coords.split(',').map(Number) ) )
 
-
 const DIRS = [[0, -1], [1, 0], [0, 1], [-1, 0]];
 
 // floodfill
@@ -125,11 +124,14 @@ const solve2 = data => {
 
     topLefts.sort((a, b) => dist([0, 0], b.pos) - dist([0, 0], a.pos));
 
-    let queue = [{
+    let queue = [], cur, minRoundtripLen = Infinity,
+        tlLen = topLefts.length, minSeen = {};
+
+    queue.push({
         seen: [],
         pos: [0,0],
         dist: tbl
-    }], cur, minRoundtripLen = Infinity, tlLen = topLefts.length, minSeen = {};
+    })
 
     while (cur = queue.pop()) {
         let distHome = dist([0, 0], cur.pos);
