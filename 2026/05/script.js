@@ -150,6 +150,7 @@ const solve2 = data => {
         topLefts
         .filter(t => !cur.seen.includes(t.id))
         .sort((a, b) => dist(cur.pos, b.pos) - dist(cur.pos, a.pos) )
+        .slice(-3) // this is optional, it speeds the computation greatly
         .forEach(t => queue.push({
             pos: t.pos,
             seen: [...cur.seen, t.id].sort(),
