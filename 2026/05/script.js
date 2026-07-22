@@ -1,9 +1,3 @@
-Object.defineProperty(Array.prototype, 'sum', {
-    value: function() {
-        return this.reduce((a, v) => a+v, 0);
-    }
-});
-
 const dist = (a, b) => Math.abs(a[0] - b[0]) + Math.abs(a[1] - b[1]);
 const offMap = (map, x, y) => map[y] === undefined || map[y][x] === undefined;
 
@@ -41,13 +35,11 @@ const distanceMap = (map, froms, entryDist = 0, wall = '#', path = '.') => {
 }
 
 const solve = (data, returnMap = false) => {
-    let borders = new Set(), xmin = 100, xmax = 0, ymin = 100, ymax = 0;
+    let xmax = 0, ymax = 0;
 
     data.forEach(row => row.forEach(([x, y]) => {
-        xmin = Math.min(xmin, x-1);
-        ymin = Math.min(ymin, y-1);
-        xmax = Math.max(xmax, x+1);
-        ymax = Math.max(ymax, y+1);
+        xmax = Math.max(xmax, x);
+        ymax = Math.max(ymax, y);
     }))
 
     let map = [];
@@ -75,15 +67,22 @@ const solve = (data, returnMap = false) => {
     let res = 0;
     for (let y = 0; y < map.length; y++) for (let x = 0; x < map[0].length; x++) {
         if (map[y][x] !== '#') continue;
+
         let isBorder = false;
+
         for (let i = -1; i <= 1; i++) for (let j = -1; j <= 1; j++) {
             if (!offMap(map, x+i, y+j) && dmap[y+j][x+i] !== Infinity) isBorder = true;
         }
-        if (isBorder || y === 0) res++; // lol lazy accounting for rectangles bordering top row
-        else map[y][x] = '.';
+
+        if (isBorder || y === 0 || x === 0 || y === ymax || x === xmax) {
+            res++;
+        } else {
+            map[y][x] = '.';
+        }
     }
 
     document.getElementById('root').innerHTML = map.map(row=> row.join('')).join('\n');
+
     return returnMap ? map : res;
 }
 
@@ -94,8 +93,7 @@ const solve2 = data => {
     // now we need to create a marked version of the map with individual distinct polygon's borders marked by their ids
     // during this process we also find top left corners of all the polygons
     // then we can find shortest path between those top left corners (starting and ending at [0, 0] ofc)
-    // takes about 6 seconds to compute
-
+    
     let tbl = 0; // The Black Lotus! ... or total border length
     let marked = map.map(row => row.slice().fill(0))
     let topLefts = [];
