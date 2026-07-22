@@ -33,7 +33,7 @@ const distanceMap = (map, froms, entryDist = 0, wall = '#', path = '.') => {
     return filled;
 }
 
-const solve = (data, returnMap = false) => {
+const solve = data => {
     let xmax = 0, ymax = 0;
 
     data.forEach(row => row.forEach(([x, y]) => {
@@ -82,11 +82,11 @@ const solve = (data, returnMap = false) => {
 
     document.getElementById('root').innerHTML = map.map(row=> row.join('')).join('\n');
 
-    return returnMap ? map : res;
+    return [map, res];
 }
 
 const solve2 = data => {
-    let map = solve(data, true);
+    let [map, p1res] = solve(data);
     let cols = map[0].length, rows = map.length;
 
     // now we need to create a marked version of the map with individual distinct polygon's borders marked by their ids
@@ -158,8 +158,7 @@ const solve2 = data => {
         }))
     }
     
-    return minRoundtripLen;
+    return [p1res, minRoundtripLen];
 }
 
-console.log('p1', solve(parse(input)));
-console.log('p2', solve2(parse(input)));
+console.log(solve2(parse(input)));
