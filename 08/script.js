@@ -91,7 +91,7 @@ const solve2 = data => {
                 if (nodes[bot.currentNode].rubbish > 0 && nodes[bot.currentNode].cleaningInProgress === false) {
                     // cleaning
                     turnOnCleaningInNodes.push(bot.currentNode);
-                    bot.busyTill = t + nodes[bot.currentNode].rubbish; // bots arriving at the exact second are all delayed by rubbush seconds as they can't cooperate; they simply take turns
+                    bot.busyTill = t + nodes[bot.currentNode].rubbish; // bots arriving at the exact second are all delayed by rubbish seconds as they can't cooperate; they simply take turns
                 } else {
                     // travel
                     bot.currentNode = bot.nextNode;
